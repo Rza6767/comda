@@ -33,16 +33,16 @@ async def authorize(client, message):
                 update_user_ldata(id_, 'topic_ids', tids_)
                 if DATABASE_URL:
                     await DbManger().update_user_data(id_)
-                msg = 'Topic Authorized!'
+                msg = 'Tᴏᴘɪᴄ Aᴜᴛʜᴏʀɪᴢᴇᴅ!'
             else:
-                msg = 'Topic Already Authorized!'
+                msg = 'Tᴏᴘɪᴄ Aʟʀᴇᴀᴅʏ Aᴜᴛʜᴏʀɪᴢᴇᴅ!'
     else:
         update_user_ldata(id_, 'is_auth', True)
         if tid_:
             update_user_ldata(id_, 'topic_ids', [tid_])
-            msg = 'Topic Authorized!'
+            msg = 'Tᴏᴘɪᴄ Aᴜᴛʜᴏʀɪᴢᴇᴅ!'
         else:
-            msg = 'Authorized'
+            msg = 'Aᴜᴛʜᴏʀɪᴢᴇᴅ'
         if DATABASE_URL:
             await DbManger().update_user_data(id_)
     await sendMessage(message, msg)
@@ -72,9 +72,9 @@ async def unauthorize(client, message):
             update_user_ldata(id_, 'is_auth', False)
         if DATABASE_URL:
             await DbManger().update_user_data(id_)
-        msg = 'Unauthorized'
+        msg = 'Uɴᴀᴜᴛʜᴏʀɪᴢᴇᴅ'
     else:
-        msg = 'Already Unauthorized!'
+        msg = 'Aʟʀᴇᴀᴅʏ Uɴᴀᴜᴛʜᴏʀɪᴢᴇᴅ!'
     await sendMessage(message, msg)
 
 
@@ -87,14 +87,14 @@ async def addSudo(client, message):
         id_ = reply_to.from_user.id
     if id_:
         if id_ in user_data and user_data[id_].get('is_sudo'):
-            msg = 'Already Sudo!'
+            msg = 'Aʟʀᴇᴀᴅʏ Sᴜᴅᴏ!'
         else:
             update_user_ldata(id_, 'is_sudo', True)
             if DATABASE_URL:
                 await DbManger().update_user_data(id_)
-            msg = 'Promoted as Sudo'
+            msg = 'Pʀᴏᴍᴏᴛᴇᴅ ᴀs Sᴜᴅᴏ'
     else:
-        msg = "<i>Give User's ID or Reply to User's message of whom you want to Promote as Sudo</i>"
+        msg = "<i>Gɪᴠᴇ Usᴇʀ's ID ᴏʀ Rᴇᴘʟʏ ᴛᴏ Usᴇʀ's ᴍᴇssᴀɢᴇ ᴏғ ᴡʜᴏᴍ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ Pʀᴏᴍᴏᴛᴇ ᴀs Sᴜᴅᴏ</i>"
     await sendMessage(message, msg)
 
 
@@ -107,14 +107,14 @@ async def removeSudo(client, message):
         id_ = reply_to.from_user.id
     if id_:
         if id_ in user_data and not user_data[id_].get('is_sudo'):
-            msg = 'Not a Sudo User, Already Demoted'
+            msg = 'Nᴏᴛ ᴀ Sᴜᴅᴏ Usᴇʀ, Aʟʀᴇᴀᴅʏ Dᴇᴍᴏᴛᴇᴅ'
         else:
             update_user_ldata(id_, 'is_sudo', False)
             if DATABASE_URL:
                 await DbManger().update_user_data(id_)
-            msg = 'Demoted'
+            msg = 'Dᴇᴍᴏᴛᴇᴅ'
     else:
-        msg = "<i>Give User's ID or Reply to User's message of whom you want to Demote</i>"
+        msg = "<i>Gɪᴠᴇ Usᴇʀ's ID ᴏʀ Rᴇᴘʟʏ ᴛᴏ Usᴇʀ's ᴍᴇssᴀɢᴇ ᴏғ ᴡʜᴏᴍ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ Dᴇᴍᴏᴛᴇ</i>"
     await sendMessage(message, msg)
 
 
