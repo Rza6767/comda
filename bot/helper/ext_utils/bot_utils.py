@@ -44,17 +44,17 @@ PAGE_NO      = 1
 
 
 class MirrorStatus:
-    STATUS_UPLOADING   = "Upload"
-    STATUS_DOWNLOADING = "Download"
-    STATUS_CLONING     = "Clone"
-    STATUS_QUEUEDL     = "QueueDL"
-    STATUS_QUEUEUP     = "QueueUp"
-    STATUS_PAUSED      = "Pause"
-    STATUS_ARCHIVING   = "Archive"
-    STATUS_EXTRACTING  = "Extract"
-    STATUS_SPLITTING   = "Split"
-    STATUS_CHECKING    = "CheckUp"
-    STATUS_SEEDING     = "Seed"
+    STATUS_UPLOADING   = "📤 Uᴘʟᴏᴀᴅɪɴɢ...."
+    STATUS_DOWNLOADING = "📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ...."
+    STATUS_CLONING     = "♻️ Cʟᴏɴᴇ"
+    STATUS_QUEUEDL     = "💤 QᴜᴇᴜᴇDL"
+    STATUS_QUEUEUP     = "💤 QᴜᴇᴜᴇUᴘ"
+    STATUS_PAUSED      = "⛔️ Pᴀᴜsᴇ"
+    STATUS_ARCHIVING   = "🔐 Aʀᴄʜɪᴠᴇ"
+    STATUS_EXTRACTING  = "📂 Exᴛʀᴀᴄᴛ"
+    STATUS_SPLITTING   = "✂️ Sᴘʟɪᴛ"
+    STATUS_CHECKING    = "📝 CʜᴇᴄᴋUᴘ"
+    STATUS_SEEDING     = "🌧 Sᴇᴇᴅ"
 
 
 class setInterval:
@@ -140,8 +140,8 @@ def get_progress_bar_string(pct):
     pct = float(str(pct).strip('%'))
     p = min(max(pct, 0), 100)
     cFull = int(p // 10)
-    p_str = '★' * cFull
-    p_str += '☆' * (10 - cFull)
+    p_str = '█' * cFull
+    p_str += '▒' * (10 - cFull)
     return f"[{p_str}]"
 
 
@@ -152,12 +152,12 @@ def get_all_versions():
     except FileNotFoundError:
         vp = ''
     try:
-        result = srun(['ffmpeg', '-version'], capture_output=True, text=True)
+        result = srun([bot_cache['pkgs'][2], '-version'], capture_output=True, text=True)
         vf = result.stdout.split('\n')[0].split(' ')[2].split('ubuntu')[0]
     except FileNotFoundError:
         vf = ''
     try:
-        result = srun(['rclone', 'version'], capture_output=True, text=True)
+        result = srun([bot_cache['pkgs'][3], 'version'], capture_output=True, text=True)
         vr = result.stdout.split('\n')[0].split(' ')[1]
     except FileNotFoundError:
         vr = ''
@@ -183,18 +183,18 @@ class EngineStatus:
         if not (version_cache := bot_cache.get('eng_versions')):
             get_all_versions()
             version_cache = bot_cache.get('eng_versions')
-        self.STATUS_ARIA = f"Aria2 v{version_cache['aria']}"
-        self.STATUS_AIOHTTP = f"AioHttp {version_cache['aiohttp']}"
-        self.STATUS_GD = f"Google-API v{version_cache['gapi']}"
-        self.STATUS_MEGA = f"MegaSDK v{version_cache['mega']}"
-        self.STATUS_QB = f"qBit {version_cache['qbit']}"
-        self.STATUS_TG = f"PyroF v{version_cache['pyro']}"
-        self.STATUS_YT = f"yt-dlp v{version_cache['ytdlp']}"
-        self.STATUS_EXT = "pExtract v2"
-        self.STATUS_SPLIT_MERGE = f"ffmpeg v{version_cache['ffmpeg']}"
-        self.STATUS_ZIP = f"p7zip v{version_cache['p7zip']}"
-        self.STATUS_QUEUE = "Sleep v0"
-        self.STATUS_RCLONE = f"RClone {version_cache['rclone']}"
+        self.STATUS_ARIA = f"📶 Aʀɪᴀ𝟸 <code>v{version_cache['aria']}</code>"
+        self.STATUS_AIOHTTP = f"🌐 AɪᴏHᴛᴛᴘ <code>{version_cache['aiohttp']}</code>"
+        self.STATUS_GD = f"♻️ Gᴏᴏɢʟᴇ-Aᴘɪ <code>v{version_cache['gapi']}</code>"
+        self.STATUS_MEGA = f"⭕️ MᴇɢᴀSᴅᴋ <code>v{version_cache['mega']}</code>"
+        self.STATUS_QB = f"🦠 ǫBɪᴛ <code>{version_cache['qbit']}</code></code>"
+        self.STATUS_TG = f"💥 PʏʀᴏFᴏʀᴋ <code>v{version_cache['pyro']}</code>"
+        self.STATUS_YT = f"⭐ ʏᴛ-ᴅʟᴘ <code>v{version_cache['ytdlp']}</code>"
+        self.STATUS_EXT = "⚔️ ᴘExᴛʀᴀᴄᴛ ᴠ𝟸"
+        self.STATUS_SPLIT_MERGE = f"🍿 FғMᴘᴇɢ <code>v{version_cache['ffmpeg']}</code>"
+        self.STATUS_ZIP = f"🛠 ᴘ𝟽Zɪᴘ <code>v{version_cache['p7zip']}</code>"
+        self.STATUS_QUEUE = "💤 Sʟᴇᴇᴘ ᴠ𝟶"
+        self.STATUS_RCLONE = f"🍻 RCʟᴏɴᴇ <code>{version_cache['rclone']}</code>"
 
 
 def get_readable_message():
@@ -212,9 +212,9 @@ def get_readable_message():
         elapsed = time() - download.message.date.timestamp()
         msg += BotTheme('STATUS_NAME', Name="Task is being Processed!" if config_dict['SAFE_MODE'] and elapsed >= config_dict['STATUS_UPDATE_INTERVAL'] else escape(f'{download.name()}'))
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING]:
+            msg += BotTheme('STATUS', Status=download.status(), Url=msg_link) 
             msg += BotTheme('BAR', Bar=f"{get_progress_bar_string(download.progress())} {download.progress()}")
             msg += BotTheme('PROCESSED', Processed=f"{download.processed_bytes()} of {download.size()}")
-            msg += BotTheme('STATUS', Status=download.status(), Url=msg_link)
             msg += BotTheme('ETA', Eta=download.eta())
             msg += BotTheme('SPEED', Speed=download.speed())
             msg += BotTheme('ELAPSED', Elapsed=get_readable_time(elapsed))
@@ -240,7 +240,7 @@ def get_readable_message():
             msg += BotTheme('NON_ENGINE', Engine=download.eng())
 
         msg += BotTheme('USER',
-                        User=download.message.from_user.mention(style="html"))
+                        User=download.message.from_user.first_name)
         msg += BotTheme('ID', Id=download.message.from_user.id)
         if (download.eng()).startswith("qBit"):
             msg += BotTheme('BTSEL', Btsel=f"/{BotCommands.BtSelectCommand}_{download.gid()}")
@@ -501,10 +501,10 @@ async def get_stats(event, key="home"):
     btns.ibutton('Back', f'wzmlx {user_id} stats home')
     if key == "home":
         btns = ButtonMaker()
-        btns.ibutton('Bot Stats', f'wzmlx {user_id} stats stbot')
-        btns.ibutton('OS Stats', f'wzmlx {user_id} stats stsys')
-        btns.ibutton('Repo Stats', f'wzmlx {user_id} stats strepo')
-        btns.ibutton('Bot Limits', f'wzmlx {user_id} stats botlimits')
+        btns.ibutton('Bᴏᴛ Sᴛᴀᴛs', f'wzmlx {user_id} stats stbot')
+        btns.ibutton('Os Sᴛᴀᴛs', f'wzmlx {user_id} stats stsys')
+        btns.ibutton('Rᴇᴘᴏ Sᴛᴀᴛs', f'wzmlx {user_id} stats strepo')
+        btns.ibutton('Bᴏᴛ Lɪᴍɪᴛs', f'wzmlx {user_id} stats botlimits')
         msg = "⌬ <b><i>Bot & OS Statistics!</i></b>"
     elif key == "stbot":
         total, used, free, disk = disk_usage('/')
@@ -528,10 +528,10 @@ async def get_stats(event, key="home"):
             disk_bar=get_progress_bar_string(disk),
             disk_read=f"{get_readable_file_size(disk_io.read_bytes)} ({get_readable_time(disk_io.read_time / 1000)})"
             if disk_io
-            else "Access Denied",
+            else "Aᴄᴄᴇss Dᴇɴɪᴇᴅ",
             disk_write=f"{get_readable_file_size(disk_io.write_bytes)} ({get_readable_time(disk_io.write_time / 1000)})"
             if disk_io
-            else "Access Denied",
+            else "Aᴄᴄᴇss Dᴇɴɪᴇᴅ",
             disk_t=get_readable_file_size(total),
             disk_u=get_readable_file_size(used),
             disk_f=get_readable_file_size(free),
@@ -560,8 +560,8 @@ async def get_stats(event, key="home"):
         last_commit, changelog = 'No Data', 'N/A'
         if await aiopath.exists('.git'):
             last_commit = (await cmd_exec("git log -1 --pretty='%cd ( %cr )' --date=format-local:'%d/%m/%Y'", True))[0]
-            changelog = (await cmd_exec("git log -1 --pretty=format:'<code>%s</code> <b>By</b> %an'", True))[0]
-        official_v = (await cmd_exec(f"curl -o latestversion.py https://raw.githubusercontent.com/weebzone/WZML-X/{config_dict['UPSTREAM_BRANCH']}/bot/version.py -s && python3 latestversion.py && rm latestversion.py", True))[0]
+            changelog = (await cmd_exec("git log -1 --pretty=format:'<code>%s</code> <b>By</b> Rᴜʟғ 🍻'", True))[0]
+        official_v = (await cmd_exec("curl -o latestversion.py https://gitlab.com/mysterysd.sd/WZML-X/-/raw/hk_wzmlx/bot/version.py -s && python3 latestversion.py && rm latestversion.py", True))[0]
         msg = BotTheme('REPO_STATS',
             last_commit=last_commit,
             bot_version=get_version(),
@@ -579,8 +579,8 @@ async def get_stats(event, key="home"):
                 CL = ('∞' if (val := config_dict['CLONE_LIMIT']) == '' else val),
                 ML = ('∞' if (val := config_dict['MEGA_LIMIT']) == '' else val),
                 LL = ('∞' if (val := config_dict['LEECH_LIMIT']) == '' else val),
-                TV  = ('Disabled' if (val := config_dict['TOKEN_TIMEOUT']) == '' else get_readable_time(val)),
-                UTI = ('Disabled' if (val := config_dict['USER_TIME_INTERVAL']) == 0 else get_readable_time(val)),
+                TV  = ('Dɪsᴀʙʟᴇᴅ' if (val := config_dict['TOKEN_TIMEOUT']) == '' else get_readable_time(val)),
+                UTI = ('Dɪsᴀʙʟᴇᴅ' if (val := config_dict['USER_TIME_INTERVAL']) == 0 else get_readable_time(val)),
                 UT = ('∞' if (val := config_dict['USER_MAX_TASKS']) == '' else val),
                 BT = ('∞' if (val := config_dict['BOT_MAX_TASKS']) == '' else val),
         )
@@ -658,7 +658,7 @@ async def checking_access(user_id, button=None):
         if button is None:
             button = ButtonMaker()
         encrypt_url = b64encode(f"{token}&&{user_id}".encode()).decode()
-        button.ubutton('Generate New Token', short_url(f'https://redirect.jet-mirror.in/{bot_name}/{encrypt_url}'))
+        button.ubutton('Generate New Token', short_url(f'https://t.me/{bot_name}?start={encrypt_url}'))
         return f'<i>Temporary Token has been expired,</i> Kindly generate a New Temp Token to start using bot Again.\n<b>Validity :</b> <code>{get_readable_time(config_dict["TOKEN_TIMEOUT"])}</code>', button
     return None, button
 
@@ -668,6 +668,7 @@ def extra_btns(buttons, already=False):
         for btn_name, btn_url in extra_buttons.items():
             buttons.ubutton(btn_name, btn_url, 'l_body')
     return buttons, True
+
 
 
 async def set_commands(client):
