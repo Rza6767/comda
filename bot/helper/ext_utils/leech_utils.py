@@ -127,18 +127,22 @@ async def get_audio_thumb(audio_file):
     return des_dir
 
 
-async def take_ss(video_file, duration=None, total=1, gen_ss=False):
-    des_dir = ospath.join('Thumbnails', f"{time()}")
+async def take_ss(video_file, duration):
+    des_dir = 'Thumbnails'
     await makedirs(des_dir, exist_ok=True)
+    des_dir = ospath.join(des_dir, f"{time()}.jpg")
     if duration is None:
         duration = (await get_media_info(video_file))[0]
     if duration == 0:
         duration = 3
-    duration = duration - (duration * 2 / 100)
-    cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", "",
+    duration = duration // 2
+    cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(duration),
            "-i", video_file, "-vf", "thumbnail", "-frames:v", "1", des_dir]
-    tstamps = {}
-    thumb_sem = Semaphore(3)
+    _, err, code = await cmd_exec(cmd)
+    if code != 0 or not await aiopath.exists(des_dir):
+        LOGGER.error( f'Error while extracting thumbnail from video. Name: {video_file} stderr: {err}')
+        return None
+    return des_dir
     
     async def extract_ss(eq_thumb):
         async with thumb_sem:
